@@ -40,16 +40,51 @@ def user_details(user_id):
     """Show user details"""
 
     user_info = User.query.filter_by(user_id=user_id).first()
-    # age = user_info.age
-    # zipcode = user_info.zipcode
-
-    # movie_ratings = db.session.query(User.user_id,
-    #                                  Rating.score,
-    #                                  Movie.title).join(Rating).join(Movie)
-
-    # user_ratings = movie_ratings.filter(User.user_id==user_id).all()
 
     return render_template("user_details.html", user_info=user_info)
+
+
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movie = Movie.query
+    movies = movie.order_by("title").all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route("/movies/<movie_id>")
+def movie_details(movie_id):
+    """Show movie details"""
+
+    movie_info = Movie.query.filter_by(movie_id=movie_id).first()
+
+    return render_template("movie_details.html", movie_info=movie_info)
+
+
+@app.route("/movierating", methods=["POST"])
+def movie_rating():
+    """Update or add movie rating to database."""
+
+    rating = request.form.get("rating")
+    movie_id = request.form.get("movie_id")
+    current_user = session["user_id"]
+
+    existing_rating = Rating.query.filter_by(user_id=current_user).first()
+
+    if existing_rating is None:
+        new_rating = Rating(user_id=current_user, movie_id=movie_id, score=rating)
+
+        db.session.add(new_rating)
+        db.session.commit()
+
+        return redirect("/movies")
+
+    else:
+        existing_rating.score = rating
+        db.session.commit()
+
+        return redirect("/movies")
 
 
 @app.route("/register", methods=["GET"])
