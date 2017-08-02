@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <title>User Details</title>
+</head>
+
+<body>
+  <h1>User Details</h1>
+  <p>Age: {{ user_info.age }} </br> Zipcode: {{ user_info.zipcode }} </br></p>
+  <table>
+    <tr>
+      <td>
+        <center><b>Movie:</b></center>
+      </td>
+      <td>
+        <center><b>Score:</b></center>
+      </td>
+    </tr>
+
+    {% for rating in user_info.ratings %}
+        <tr>
+          <td>
+            <center>{{ rating.movie.title }}</center>
+        </td>
+        <td>
+            <center>{{ rating.score }}</center>
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+</body>
+</html>

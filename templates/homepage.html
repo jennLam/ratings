@@ -12,4 +12,13 @@
 <h2>Register</h2>
 <p><a href="/register">Register</a></p>
 
+{% if session.get("user_id") %}
+<h2>Logout</h2>
+<p><a href="/logout">Logout</a></p>
+{% else %}
+
+<h2>Login</h2>
+<p><a href="/login">Login</a></p>
+{% endif %}
+
 {% endblock %}
