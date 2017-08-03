@@ -59,7 +59,19 @@ def movie_details(movie_id):
 
     movie_info = Movie.query.filter_by(movie_id=movie_id).first()
 
-    return render_template("movie_details.html", movie_info=movie_info)
+    # Prediction code: only predict if the user hasn't rated it.
+    user_id = session.get("user_id")
+    user_rating = Rating.query.filter_by(movie_id=movie_id, user_id=user_id).first()
+
+    prediction = None
+
+    if (not user_rating) and user_id:
+        user = User.query.get(user_id)
+        if user:
+            prediction = user.predict_rating(movie_info)
+
+    return render_template("movie_details.html", movie_info=movie_info,
+                           prediction=prediction)
 
 
 @app.route("/movierating", methods=["POST"])

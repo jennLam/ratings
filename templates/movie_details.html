@@ -8,6 +8,8 @@
     <h1>{{ movie_info.title }} Details</h1>
     <p>Release Date: {{ movie_info.released_at }} </br> IMDB URL: {{ movie_info.imdb_url }} </br></p>
     {% if session.get("user_id") %}
+
+      Prediction: {{ prediction }}
       <form action="/movierating" method="POST">
         <input type="hidden" name="movie_id" value="{{ movie_info.movie_id }}">
         Rating: <select name="rating">
