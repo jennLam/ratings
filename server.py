@@ -70,7 +70,7 @@ def movie_rating():
     movie_id = request.form.get("movie_id")
     current_user = session["user_id"]
 
-    existing_rating = Rating.query.filter_by(user_id=current_user).first()
+    existing_rating = Rating.query.filter_by(user_id=current_user, movie_id=movie_id).first()
 
     if existing_rating is None:
         new_rating = Rating(user_id=current_user, movie_id=movie_id, score=rating)
@@ -78,13 +78,13 @@ def movie_rating():
         db.session.add(new_rating)
         db.session.commit()
 
-        return redirect("/movies")
+        return redirect(request.referrer)
 
     else:
         existing_rating.score = rating
         db.session.commit()
 
-        return redirect("/movies")
+        return redirect(request.referrer)
 
 
 @app.route("/register", methods=["GET"])
@@ -138,7 +138,6 @@ def do_login():
                 session["user_id"] = existing_email.user_id
 
                 flash("Successfully logged in.")
-
                 return redirect("/")
             else:
                 flash("Incorrect password.")

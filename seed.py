@@ -40,19 +40,26 @@ def load_movies():
 
     print "Movies"
 
+    # Delete all rows to prevent duplication when running again
     Movie.query.delete()
 
+    # Read u.item file and insert data
     for row in open("seed_data/u.item"):
         row = row.rstrip()
         movie_info = row.split("|")
+
         movie_id = movie_info[0]
         title = movie_info[1]
         released_str = movie_info[2]
         imdb_url = movie_info[4]
 
+        # Strip year off string
         title = title[:-7]
+
+        # Convert to unicode
         title = title.decode("latin-1")
 
+        # Convert released date string to datetime
         if released_str:
             released_at = datetime.strptime(released_str, "%d-%b-%Y")
         else:
@@ -63,6 +70,7 @@ def load_movies():
                       released_at=released_at,
                       imdb_url=imdb_url)
 
+        # Add to database
         db.session.add(movie)
 
     db.session.commit()
@@ -73,10 +81,13 @@ def load_ratings():
 
     print "Rating"
 
+    # Delete all rows to prevent duplication when running again
     Rating.query.delete()
 
+    # Read u.data file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
+        # Split using \t since data is separated by tab
         user_id, movie_id, score, timestamp = row.split("\t")
 
         rating = Rating(user_id=user_id,

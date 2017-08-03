@@ -1,43 +1,44 @@
 <!doctype html>
 <html>
-<head>
-  <title>Movie Details</title>
-</head>
+  <head>
+    <title>Movie Details</title>
+  </head>
 
-<body>
-  <h1>{{ movie_info.title }} Details</h1>
-  <p>Release Date: {{ movie_info.released_at }} </br> IMDB URL: {{ movie_info.imdb_url }} </br></p>
-  {% if session.get("user_id") %}
-  <form action="/movierating" method="POST">
-    <input type="hidden" name="movie_id" value="{{ movie_info.movie_id }}">
-    Rating: <select name="rating">
-      <option value='1'>1</option>
-      <option value='2'>2</option>
-      <option value='3'>3</option>
-      <option value='4'>4</option>
-      <option value='5'>5</option>
-    </select>
-    <input type="submit" value="Submit">
+  <body>
+    <h1>{{ movie_info.title }} Details</h1>
+    <p>Release Date: {{ movie_info.released_at }} </br> IMDB URL: {{ movie_info.imdb_url }} </br></p>
+    {% if session.get("user_id") %}
+      <form action="/movierating" method="POST">
+        <input type="hidden" name="movie_id" value="{{ movie_info.movie_id }}">
+        Rating: <select name="rating">
+          <option value='1'>1</option>
+          <option value='2'>2</option>
+          <option value='3'>3</option>
+          <option value='4'>4</option>
+          <option value='5'>5</option>
+        </select>
+        <input type="submit" value="Submit">
+      </form>
     {% else %}
-    <a href="/login" method="GET">Please log in if you want to rate.</a>
+      <a href="/login" method="GET">Please log in if you want to rate.</a>
     {% endif %}
 
-  <table>
-    <tr>
-      <td>
-        <center><b>Ratings:</b></center>
-      </td>
-    </tr>
-
-    {% for rating in movie_info.ratings %}
-        <tr>
+    <table>
+      <tr>
         <td>
-            <center>{{ rating.score }}</center>
+          <center><b>Ratings:</b></center>
         </td>
-    </tr>
+      </tr>
 
-    {% endfor %}
-</table>
+      {% for rating in movie_info.ratings %}
+        <tr>
+          <td>
+              <center>User Id {{ rating.user.user_id }}: {{ rating.score }}</center>
+          </td>
+        </tr>
 
-</body>
+      {% endfor %}
+    </table>
+
+  </body>
 </html>
